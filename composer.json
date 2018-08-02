@@ -1,0 +1,41 @@
+{
+    "name": "reyesoft/qr-code",
+    "description": "Reyesoft Crypto QR Code",
+    "keywords": ["reyesoft", "qrcode", "qr", "code", "bundle", "php"],
+    "homepage": "https://github.com/endroid/qr-code",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Castellano Juan I"
+        }
+    ],
+    "require": {
+        "php": ">=7.1",
+        "ext-gd": "*",
+        "bacon/bacon-qr-code": "^1.0.3",
+        "endroid/installer": "^1.0.3",
+        "khanamiryan/qrcode-detector-decoder": "^1.0.2",
+        "myclabs/php-enum": "^1.5",
+        "symfony/options-resolver": "^2.7|^3.0|^4.0",
+        "symfony/property-access": "^2.7|^3.0|^4.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.7|^6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Reyesoft\\CryptoQr\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Reyesoft\\CryptoQr\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "3.x-dev"
+        }
+    }
+}
