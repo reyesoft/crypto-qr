@@ -4,41 +4,71 @@ namespace CryptoQr;
 
 use Endroid\QrCode\QrCode;
 
+/**
+ * Class BitcoinQr
+ * @package CryptoQr
+ */
 class BitcoinQr extends QrCode
 {
+    /**
+     * @var string
+     */
     protected $address;
+    /**
+     * @var float
+     */
     protected $amount;
+    /**
+     * @var string
+     */
     protected $name;
+    /**
+     * @var string
+     */
     protected $message;
 
+    /**
+     * BitcoinQr constructor.
+     *
+     * @param string $address
+     */
     public function __construct(string $address = '')
     {
         $this->address = $address;
         parent::__construct('bitcoin:' . $this->address);
     }
 
-    public function setName(string $name)
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void
     {
         if ($this->addressCheck()) {
             $this->addName($name);
         }
     }
 
-    public function setAmount(float $amount)
+    /**
+     * @param float $amount
+     */
+    public function setAmount(float $amount): void
     {
         if ($this->addressCheck()) {
             $this->addAmount($amount);
         }
     }
 
-    public function setMessage(string $message)
+    /**
+     * @param string $message
+     */
+    public function setMessage(string $message): void
     {
         if ($this->addressCheck()) {
             $this->addMessage($message);
         }
     }
 
-    private function addressCheck()
+    private function addressCheck(): bool
     {
         if (!is_null($this->address)) {
             return true;
@@ -47,7 +77,7 @@ class BitcoinQr extends QrCode
         }
     }
 
-    private function addName(string $name)
+    private function addName(string $name): void
     {
         $rawname = rawurlencode($name);
         $this->name = $rawname;
@@ -61,7 +91,7 @@ class BitcoinQr extends QrCode
         $this->setText($uri);
     }
 
-    private function addAmount(float $amount)
+    private function addAmount(float $amount): void
     {
         $this->amount = $amount;
         $uri = $this->getText();
@@ -69,7 +99,7 @@ class BitcoinQr extends QrCode
         $this->setText($uri);
     }
 
-    private function addMessage(string $message)
+    private function addMessage(string $message): void
     {
         $rawmessage = rawurlencode($message);
         $this->message = $rawmessage;
@@ -92,25 +122,25 @@ class BitcoinQr extends QrCode
     }
 
     /**
-     * @return mixed
+     * @return float
      */
-    public function getAmount()
+    public function getAmount(): float
     {
         return $this->amount;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }
