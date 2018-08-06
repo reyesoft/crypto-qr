@@ -11,9 +11,9 @@ class BitcoinQr extends QrCode
     protected $name;
     protected $message;
 
-    public function __construct(string $text = '')
+    public function __construct(string $address = '')
     {
-        $this->address = $text;
+        $this->address = $address;
         parent::__construct('bitcoin:' . $this->address);
     }
 
