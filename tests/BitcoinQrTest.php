@@ -110,7 +110,7 @@ class BitcoinQrTest extends TestCase
 
     public function testWriteBitcoinQrFile(): void
     {
-        $filename = '/home/juan/Imágenes/bitcoin-qr-code.png';
+        $filename = __DIR__ . '/output/bitcoin-qr-code.png';
 
         $address = '175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W';
         $name = 'Jagannath';
