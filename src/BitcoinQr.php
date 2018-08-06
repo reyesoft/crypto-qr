@@ -10,7 +10,6 @@ class BitcoinQr extends QrCode
     protected $amount;
     protected $name;
     protected $message;
-    protected $unit;
 
     public function __construct(string $text = '')
     {
@@ -18,21 +17,21 @@ class BitcoinQr extends QrCode
         parent::__construct('bitcoin:' . $this->address);
     }
 
-    public function uriWithName(string $name)
+    public function setName(string $name)
     {
         if ($this->addressCheck()) {
             $this->addName($name);
         }
     }
 
-    public function uriWithAmount(float $amount, string $unit)
+    public function setAmount(float $amount)
     {
         if ($this->addressCheck()) {
-            $this->addAmount($amount, $unit);
+            $this->addAmount($amount);
         }
     }
 
-    public function uriWithMessage(string $message)
+    public function setMessage(string $message)
     {
         if ($this->addressCheck()) {
             $this->addMessage($message);
@@ -50,50 +49,37 @@ class BitcoinQr extends QrCode
 
     private function addName(string $name)
     {
+        $rawname = rawurlencode($name);
+        $this->name = $rawname;
+        $uri = $this->getText();
         if (!is_null($this->getAmount())) {
-            $this->name = $name;
-            $uri = $this->getText();
-            $uri .= '&label=' . $name;
-            $this->setText($uri);
+            $uri .= '&';
         } else {
-            $this->name = $name;
-            $uri = $this->getText();
-            $uri .= '?label=' . $name;
-            $this->setText($uri);
+            $uri .= '?';
         }
+        $uri .= 'label=' . $rawname;
+        $this->setText($uri);
     }
 
-    private function addAmount(float $amount, string $unit)
+    private function addAmount(float $amount)
     {
         $this->amount = $amount;
         $uri = $this->getText();
-        if (in_array($unit, ['BTC', 'btc'], true)) {
-            $this->unit = 'BTC';
-            $uri .= '?amount=' . $amount . 'X8';
-            $this->setText($uri);
-        } elseif (in_array($unit, ['TBC', 'tbc'], true)) {
-            $this->unit = 'TBC';
-            if ($amount > 1000 && $amount < 10000) {
-                $this->amount = $amount/1000;
-                $uri .= '?amount=x' . $this->amount . 'X7';
-                $this->setText($uri);
-            } else {
-                $uri .= '?amount=x' . $amount . 'X4';
-                $this->setText($uri);
-            }
-        } elseif (in_array($unit, ['uBTC', 'ubtc'], true)) {
-            $this->unit = 'uBTC';
-            $uri .= '?amount=' . $amount . 'X2';
-            $this->setText($uri);
-        }
+        $uri .= '?amount=' . $amount;
+        $this->setText($uri);
     }
 
     private function addMessage(string $message)
     {
-        $rawurl = rawurlencode($message);
-        $this->message = $rawurl;
+        $rawmessage = rawurlencode($message);
+        $this->message = $rawmessage;
         $uri = $this->getText();
-        $uri .= '&message=' . $message;
+        if (!is_null($this->getAmount())) {
+            $uri .= '&';
+        } else {
+            $uri .= '?';
+        }
+        $uri .= 'message=' . $rawmessage;
         $this->setText($uri);
     }
 
@@ -128,14 +114,4 @@ class BitcoinQr extends QrCode
     {
         return $this->message;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getUnit()
-    {
-        return $this->unit;
-    }
-
-
 }
