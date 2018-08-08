@@ -15,11 +15,11 @@ class BitcoinQr extends QrCode
      */
     protected $address;
     /**
-     * @var float
+     * @var null|float
      */
     protected $amount;
     /**
-     * @var string
+     * @var null|string
      */
     protected $name;
     /**
@@ -70,11 +70,7 @@ class BitcoinQr extends QrCode
 
     private function addressCheck(): bool
     {
-        if (!is_null($this->address)) {
-            return true;
-        } else {
-            return false;
-        }
+        return !empty($this->getAddress());
     }
 
     private function addName(string $name): void
@@ -82,11 +78,7 @@ class BitcoinQr extends QrCode
         $rawname = rawurlencode($name);
         $this->name = $rawname;
         $uri = $this->getText();
-        if (!is_null($this->getAmount())) {
-            $uri .= '&';
-        } else {
-            $uri .= '?';
-        }
+        $uri .= !empty($this->getAmount()) ? '&' : '?';
         $uri .= 'label=' . $rawname;
         $this->setText($uri);
     }
@@ -104,11 +96,7 @@ class BitcoinQr extends QrCode
         $rawmessage = rawurlencode($message);
         $this->message = $rawmessage;
         $uri = $this->getText();
-        if (!is_null($this->getAmount())) {
-            $uri .= '&';
-        } else {
-            $uri .= '?';
-        }
+        $uri .= !empty($this->getAmount()) || !empty($this->getName()) ? '&' : '?';
         $uri .= 'message=' . $rawmessage;
         $this->setText($uri);
     }
@@ -122,17 +110,17 @@ class BitcoinQr extends QrCode
     }
 
     /**
-     * @return float
+     * @return null|float
      */
-    public function getAmount(): float
+    public function getAmount()
     {
         return $this->amount;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getName(): string
+    public function getName()
     {
         return $this->name;
     }

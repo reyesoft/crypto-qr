@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: juan
- * Date: 03/08/18
- * Time: 09:54
- */
 
 namespace CryptoQr\Tests;
 
@@ -69,13 +63,27 @@ class BitcoinQrTest extends TestCase
                                     '&message=' . $qr->getMessage(), $reader->text());
     }
 
+    public function testBitcoinQrWithMessage(): void
+    {
+        $address = '34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY';
+        $message = ('Donation for project xyz');
+        $qr = new BitcoinQr($address);
+        $qr->setMessage($message);
+        $qr->setSize(300);
+        $pngData = $qr->writeString();
+        $this->assertTrue(is_string($pngData));
+        $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
+        $this->assertEquals('bitcoin:' . $address .
+            '?message=' . $qr->getMessage(), $reader->text());
+    }
+
     public function testWriteBitcoinQrFile(): void
     {
         $filename = __DIR__ . '/output/bitcoin-qr-code.png';
 
         $address = '34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY';
         $name = 'Jagannath';
-        $message = ('Donation for project xyz');
+        $message = 'Donation for project xyz';
         $qr = new BitcoinQr($address);
         $qr->setAmount(80);
         $qr->setName($name);
