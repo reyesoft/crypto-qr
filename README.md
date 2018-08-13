@@ -47,4 +47,5 @@ $qr->getQrCode()->writeFile(__DIR__.'/qrcode.png');
 [endroid/qr-code](https://github.com/endroid/qr-code/blob/master/README.md#advanced-usage).
 
 
-INSERTAR AQUÍ QR GENERADO
+![bitcoin qr](https://user-images.githubusercontent.com/938894/44047859-1c4b94b0-9f06-11e8-85d7-ea7d3728691c.png "Bitcoin QR generated with BitcoinQr library")
+
