@@ -4,132 +4,115 @@ namespace CryptoQr;
 
 use Endroid\QrCode\QrCode;
 
-/**
- * Class BitcoinQr
- * @package CryptoQr
- */
-class BitcoinQr extends QrCode
+class BitcoinQr
 {
     /**
      * @var string
      */
-    protected $address;
+    protected $address = '';
+
     /**
-     * @var null|float
+     * @var float
      */
-    protected $amount;
-    /**
-     * @var null|string
-     */
-    protected $name;
+    protected $amount = .0;
+
     /**
      * @var string
      */
-    protected $message;
+    protected $label = '';
 
     /**
-     * BitcoinQr constructor.
-     *
-     * @param string $address
+     * @var string
      */
+    protected $message = '';
+
+    /**
+     * @var QrCode
+     */
+    protected $qr_code;
+
     public function __construct(string $address = '')
     {
-        $this->address = $address;
-        parent::__construct('bitcoin:' . $this->address);
+        $this->qr_code = new QrCode();
+        $this->setAddress($address);
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName(string $name): void
+    public function setAddress(string $address): void
     {
-        if ($this->addressCheck()) {
-            $this->addName($name);
-        }
+        $this->address = $address;
+        $this->updateText();
     }
 
-    /**
-     * @param float $amount
-     */
+    public function setLabel(string $label): void
+    {
+        $this->label = $label;
+        $this->updateText();
+    }
+
     public function setAmount(float $amount): void
     {
-        if ($this->addressCheck()) {
-            $this->addAmount($amount);
-        }
+        $this->amount = $amount;
+        $this->updateText();
     }
 
-    /**
-     * @param string $message
-     */
     public function setMessage(string $message): void
     {
-        if ($this->addressCheck()) {
-            $this->addMessage($message);
-        }
+        $this->message = $message;
+        $this->updateText();
     }
 
-    private function addressCheck(): bool
+    private function updateText(): void
     {
-        return !empty($this->getAddress());
+        $uri = 'bitcoin:'.$this->getAddress();
+        $params =
+            $this->getParam('amount', $this->getAmountString()) .
+            $this->getParam('label', $this->getLabel()) .
+            $this->getParam('message', $this->getMessage());
+
+        $this->getQrCode()->setText(
+            $uri .
+            ($params ? '?'.substr($params, 1):'')
+        );
     }
 
-    private function addName(string $name): void
-    {
-        $rawname = rawurlencode($name);
-        $this->name = $rawname;
-        $uri = $this->getText();
-        $uri .= !empty($this->getAmount()) ? '&' : '?';
-        $uri .= 'label=' . $rawname;
-        $this->setText($uri);
+    private function getParam(string $label, string $value): string {
+        return $value ? '&'.$label.'='.rawurlencode($value) : '';
     }
 
-    private function addAmount(float $amount): void
-    {
-        $this->amount = $amount;
-        $uri = $this->getText();
-        $uri .= '?amount=' . $amount;
-        $this->setText($uri);
-    }
-
-    private function addMessage(string $message): void
-    {
-        $rawmessage = rawurlencode($message);
-        $this->message = $rawmessage;
-        $uri = $this->getText();
-        $uri .= !empty($this->getAmount()) || !empty($this->getName()) ? '&' : '?';
-        $uri .= 'message=' . $rawmessage;
-        $this->setText($uri);
-    }
-
-    /**
-     * @return string
-     */
     public function getAddress(): string
     {
         return $this->address;
     }
 
-    /**
-     * @return null|float
-     */
-    public function getAmount()
+    public function getAmount(): float
     {
         return $this->amount;
     }
 
-    /**
-     * @return null|string
-     */
-    public function getName()
+    public function getAmountString(): string
     {
-        return $this->name;
+        $amount = $this->getAmount();
+        $string = (string)$amount;
+
+        if (preg_match('~\.(\d+)E([+-])?(\d+)~', $string, $matches)) {
+            $decimals = $matches[2] === '-' ? strlen($matches[1]) + $matches[3] : 0;
+            $string = number_format($amount, $decimals,'.','');
+        }
+
+        return $string;
     }
 
-    /**
-     * @return string
-     */
+    public function getLabel(): string
+    {
+        return $this->label;
+    }
+
     public function getMessage(): string
     {
         return $this->message;
+    }
+
+    public function getQrCode(): QrCode {
+        return $this->qr_code;
     }
 }

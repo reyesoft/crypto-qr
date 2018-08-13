@@ -19,7 +19,9 @@
         "endroid/qr-code": "^3.2"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7"
+        "reyesoft/ci": "0.1.3",
+        "phpunit/phpunit": "^7",
+        "codedungeon/phpunit-result-printer": "0.19.10"
     },
     "autoload": {
       "classmap": [
