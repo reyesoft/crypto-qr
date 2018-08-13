@@ -1,0 +1,37 @@
+{
+    "name": "reyesoft/crypto-qr",
+    "description": "This library helps to generate QR codes for Crypto Address",
+    "type": "library",
+    "keywords": ["qrcode", "bitcoin", "crypto address", "reyesoft"],
+    "homepage": "https://github.com/reyesoft/crypto-qr",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Juan I Castellano"
+        },
+        {
+            "name": "Pablo Reyes",
+            "email": "pablo@reyesoft.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.1",
+        "endroid/qr-code": "^3.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7"
+    },
+    "autoload": {
+      "classmap": [
+            "src/"
+      ],
+      "psr-4": {
+            "CryptoQr\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "CryptoQr\\Tests\\": "tests/"
+        }
+    }
+}
