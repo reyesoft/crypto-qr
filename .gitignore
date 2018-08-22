@@ -1,7 +1,6 @@
 # this project
-/storage/testing/
-/storage/downloads/
-/storage/framework/cache/
+composer.lock
+bootstrap/
 
 # reyesoft projects
 .php_cs.cache

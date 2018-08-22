@@ -10,41 +10,37 @@ class BitcoinQrTest extends TestCase
 {
     public function testBitcoinQrAddress(): void
     {
-        $address = '34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY';
-        $qr = new BitcoinQr($address);
-        $qr->setSize(300);
-        $pngData = $qr->writeString();
+        $qr = new BitcoinQr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
+        $pngData = $qr->getQrCode()->writeString();
         $this->assertTrue(is_string($pngData));
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
-        $this->assertEquals('bitcoin:' . $address, $reader->text());
+        $this->assertEquals('bitcoin:34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY', $reader->text());
     }
 
-    public function testBitcoinQrWithName(): void
+    public function testBitcoinQrWithLabel(): void
     {
         $address = '34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY';
         $qr = new BitcoinQr($address);
-        $qr->setName('Jagannath');
-        $qr->setSize(300);
-        $pngData = $qr->writeString();
+        $qr->setLabel('Caritas');
+        $pngData = $qr->getQrCode()->writeString();
         $this->assertTrue(is_string($pngData));
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertEquals('bitcoin:' . $address .
-                                    '?label=' . $qr->getName(), $reader->text());
+                                    '?label=Caritas', $reader->text());
     }
 
     public function testBitcoinQrWithRequestBtc(): void
     {
-        $address = '34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY';
-        $qr = new BitcoinQr($address);
+        $qr = new BitcoinQr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
         $qr->setAmount(20.3);
-        $qr->setName('Jagannath');
-        $qr->setSize(300);
-        $pngData = $qr->writeString();
+        $qr->setLabel('Caritas');
+        $pngData = $qr->getQrCode()->writeString();
         $this->assertTrue(is_string($pngData));
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
-        $this->assertEquals('bitcoin:' . $address .
-                                    '?amount=' . $qr->getAmount() .
-                                    '&label=' . $qr->getName(), $reader->text());
+        $this->assertEquals(
+            'bitcoin:34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY?amount=20.3&label=Caritas',
+            $reader->text()
+        );
     }
 
     public function testBitcoinQrWithRequestAndMessage(): void
@@ -52,44 +48,42 @@ class BitcoinQrTest extends TestCase
         $address = '34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY';
         $message = ('Donation for project xyz');
         $qr = new BitcoinQr($address);
-        $qr->setAmount(0.000023);
+        $qr->setAmount(0.000023456789);
         $qr->setMessage($message);
-        $qr->setSize(300);
-        $pngData = $qr->writeString();
+        $pngData = $qr->getQrCode()->writeString();
         $this->assertTrue(is_string($pngData));
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
-        $this->assertEquals('bitcoin:' . $address .
-                                    '?amount=' . $qr->getAmount()  .
-                                    '&message=' . $qr->getMessage(), $reader->text());
+        $this->assertEquals(
+            'bitcoin:34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY?amount=0.000023456789'.
+            '&message=Donation%20for%20project%20xyz',
+            $reader->text()
+        );
     }
 
     public function testBitcoinQrWithMessage(): void
     {
-        $address = '34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY';
-        $message = ('Donation for project xyz');
-        $qr = new BitcoinQr($address);
+        $message = 'Donation for project xyz';
+        $qr = new BitcoinQr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
         $qr->setMessage($message);
-        $qr->setSize(300);
-        $pngData = $qr->writeString();
+        $pngData = $qr->getQrCode()->writeString();
         $this->assertTrue(is_string($pngData));
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
-        $this->assertEquals('bitcoin:' . $address .
-            '?message=' . $qr->getMessage(), $reader->text());
+        $this->assertEquals(
+            'bitcoin:34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY' .
+            '?message=Donation%20for%20project%20xyz',
+            $reader->text()
+        );
     }
 
     public function testWriteBitcoinQrFile(): void
     {
-        $filename = __DIR__ . '/output/bitcoin-qr-code.png';
+        $filename = sys_get_temp_dir() . '/bitcoin-qr-code.png';
 
-        $address = '34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY';
-        $name = 'Jagannath';
-        $message = 'Donation for project xyz';
-        $qr = new BitcoinQr($address);
+        $qr = new BitcoinQr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
         $qr->setAmount(80);
-        $qr->setName($name);
-        $qr->setMessage($message);
-        $qr->setSize(300);
-        $qr->writeFile($filename);
+        $qr->setLabel('Caritas');
+        $qr->setMessage('Donation for project xyz');
+        $qr->getQrCode()->writeFile($filename);
 
         $image = imagecreatefromstring(file_get_contents($filename));
 
