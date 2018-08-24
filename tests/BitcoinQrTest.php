@@ -89,4 +89,15 @@ class BitcoinQrTest extends TestCase
 
         $this->assertTrue(is_resource($image));
     }
+    
+    public function testBitcoinQr(): void
+    {
+        $qr = new BitcoinQr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
+        $qr->setAmount(80);
+        $qr->setLabel('Caritas');
+        $qr->setMessage('Donation for project xyz');
+        $data = $qr->getQrCode()->writeString();
+
+        $this->assertTrue(is_string($data));
+    }
 }
