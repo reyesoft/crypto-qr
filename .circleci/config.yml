@@ -10,7 +10,8 @@ jobs:
       - image: circleci/php:7.1-apache-node-browsers
     steps:
       - checkout
-      - run: sudo apt install php7.2-gd
+      - run: sudo apt-get update
+      - run: sudo apt-get install php7.2-gd
       - run: sudo apt install -y libsqlite3-dev zlib1g-dev
       - run: sudo docker-php-ext-install zip
       - run: sudo composer self-update
