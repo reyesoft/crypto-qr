@@ -7,7 +7,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/php:7.1-apache-node-browsers
+      - image: circleci/php:7.1-apache-jessie-node-browsers
     steps:
       - checkout
       - run: sudo apt install -y libsqlite3-dev zlib1g-dev
