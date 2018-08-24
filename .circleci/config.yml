@@ -10,11 +10,13 @@ jobs:
       - image: circleci/php:7.1-node-browsers
     steps:
       - checkout
-      - run: sudo apt-get install php7.1-gd
+      - run: sudo apt install -y libsqlite3-dev zlib1g-dev
+      - run: sudo docker-php-ext-install zip
+      - run: sudo composer self-update
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "composer.json" }}
+          - v1-dependencies-{{ checksum "composer.lock" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
       - run: composer install -n --prefer-dist
