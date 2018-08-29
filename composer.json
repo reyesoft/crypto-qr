@@ -17,7 +17,6 @@
     "require": {
         "php": ">=7.1",
         "endroid/qr-code": "^3.2",
-        "ext-gd": "*"
     },
     "require-dev": {
         "reyesoft/ci": "0.1.3",
