@@ -11,9 +11,9 @@ jobs:
     steps:
       - checkout
       - run: sudo apt-get update
-      - run: sudo apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng12-dev php7.2-phpdbg
+      - run: sudo apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev
       - run: sudo docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
-      - run: sudo docker-php-ext-install gd 
+      - run: sudo docker-php-ext-install gd xdebug
 
       - restore_cache:
           keys:
