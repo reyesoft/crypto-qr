@@ -51,7 +51,7 @@
         "phpstan-src": "./vendor/bin/phpstan analyse -l 7 -c resources/rules/phpstan.src.neon src",
         "phpstan-tests": "./vendor/bin/phpstan analyse -l 7 -c resources/rules/phpstan.tests.neon tests",
         "coverage": [
-            "phpdbg -d memory_limit=-1 -qrr ./vendor/bin/phpunit tests/",
+            "xdebug -d memory_limit=-1 -qrr ./vendor/bin/phpunit tests/",
             "php ./vendor/reyesoft/ci/tools/coverage-checker.php ./bootstrap/cache/clover.xml 100"
         ]
     }
