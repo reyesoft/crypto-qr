@@ -1,4 +1,12 @@
 <?php
+/**
+ * Copyright (C) 1997-2018 Reyesoft <info@reyesoft.com>.
+ *
+ * This file is part of CryptoQr. CryptoQr can not be copied and/or
+ * distributed without the express permission of Reyesoft
+ */
+
+declare(strict_types=1);
 
 namespace CryptoQr;
 
@@ -63,20 +71,20 @@ class BitcoinQr
 
     private function updateText(): void
     {
-        $uri = 'bitcoin:'.$this->getAddress();
+        $uri = 'bitcoin:' . $this->getAddress();
         $params =
             $this->getParam('amount', $this->getAmountString()) .
             $this->getParam('label', $this->getLabel()) .
             $this->getParam('message', $this->getMessage());
 
         $this->getQrCode()->setText(
-            $uri .
-            ($params ? '?'.substr($params, 1):'')
+            $uri . (!empty($params) ? '?' . substr($params, 1) : '')
         );
     }
 
-    private function getParam(string $label, string $value): string {
-        return $value ? '&'.$label.'='.rawurlencode($value) : '';
+    private function getParam(string $label, string $value): string
+    {
+        return !empty($value) ? '&' . $label . '=' . rawurlencode($value) : '';
     }
 
     public function getAddress(): string
@@ -92,11 +100,11 @@ class BitcoinQr
     public function getAmountString(): string
     {
         $amount = $this->getAmount();
-        $string = (string)$amount;
+        $string = (string) $amount;
 
         if (preg_match('~\.(\d+)E([+-])?(\d+)~', $string, $matches)) {
             $decimals = $matches[2] === '-' ? strlen($matches[1]) + $matches[3] : 0;
-            $string = number_format($amount, $decimals,'.','');
+            $string = number_format($amount, $decimals, '.', '');
         }
 
         return $string;
@@ -112,7 +120,8 @@ class BitcoinQr
         return $this->message;
     }
 
-    public function getQrCode(): QrCode {
+    public function getQrCode(): QrCode
+    {
         return $this->qr_code;
     }
 }

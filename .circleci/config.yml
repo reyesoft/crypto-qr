@@ -6,7 +6,6 @@ version: 2
 jobs:
   build:
     docker:
-      # specify the version you desire here
       - image: circleci/php:7.1-apache-jessie-node-browsers
 
     steps:
@@ -16,18 +15,52 @@ jobs:
       - run: sudo docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
       - run: sudo docker-php-ext-install gd
 
-      # Download and cache dependencies
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "composer.lock" }}
-          # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
+
       - run: composer install -n --prefer-dist
+
       - save_cache:
           paths:
             - ./vendor
           key: v1-dependencies-{{ checksum "composer.lock" }}
-        
-      # run tests!
-      - run: ./vendor/bin/phpunit
+
+      - run: composer ci
+      - run: composer phpstan
+
+  test:
+    docker:
+      - image: circleci/php:7.1-apache-jessie-node-browsers
+
+    steps:
+      - checkout
+      - run: sudo apt-get update
+      - run: sudo apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng12-dev
+      - run: sudo docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+      - run: sudo docker-php-ext-install gd
+
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "composer.lock" }}
+          - v1-dependencies-
+
+      - run: composer install -n --prefer-dist
+
+      - save_cache:
+          paths:
+            - ./vendor
+          key: v1-dependencies-{{ checksum "composer.lock" }}
+
+      - run: composer coverage
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
 
