@@ -24,7 +24,7 @@ final class BitcoinQrTest extends TestCase
     {
         $qr = new BitcoinQr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
         $pngData = $qr->getQrCode()->writeString();
-        $this->assertIsString($pngData);
+
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame('bitcoin:34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY', $reader->text());
     }
@@ -35,7 +35,7 @@ final class BitcoinQrTest extends TestCase
         $qr = new BitcoinQr($address);
         $qr->setLabel('Caritas');
         $pngData = $qr->getQrCode()->writeString();
-        $this->assertIsString($pngData);
+
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame('bitcoin:' . $address .
                                     '?label=Caritas', $reader->text());
@@ -47,7 +47,7 @@ final class BitcoinQrTest extends TestCase
         $qr->setAmount(20.3);
         $qr->setLabel('Caritas');
         $pngData = $qr->getQrCode()->writeString();
-        $this->assertIsString($pngData);
+
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame(
             'bitcoin:34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY?amount=20.3&label=Caritas',
@@ -63,7 +63,7 @@ final class BitcoinQrTest extends TestCase
         $qr->setAmount(0.000023456789);
         $qr->setMessage($message);
         $pngData = $qr->getQrCode()->writeString();
-        $this->assertIsString($pngData);
+
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame(
             'bitcoin:34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY?amount=0.000023456789' .
@@ -78,7 +78,7 @@ final class BitcoinQrTest extends TestCase
         $qr = new BitcoinQr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
         $qr->setMessage($message);
         $pngData = $qr->getQrCode()->writeString();
-        $this->assertIsString($pngData);
+
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame(
             'bitcoin:34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY' .
@@ -97,7 +97,7 @@ final class BitcoinQrTest extends TestCase
         $qr->setMessage('Donation for project xyz');
         $qr->getQrCode()->writeFile($filename);
 
-        $image = imagecreatefromstring(file_get_contents($filename));
+        $image = imagecreatefromstring((string) file_get_contents($filename));
 
         $this->assertIsResource($image);
     }

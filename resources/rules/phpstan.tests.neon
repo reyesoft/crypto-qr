@@ -2,7 +2,8 @@ includes:
     - ../../vendor/phpstan/phpstan-strict-rules/rules.neon
     - ../../vendor/phpstan/phpstan-phpunit/extension.neon
     - ../../vendor/phpstan/phpstan-phpunit/rules.neon
-    - ../../vendor/phpstan/phpstan-phpunit/strictRules.neon
 
 parameters:
     bootstrap: %rootDir%/../../../resources/rules/phpstan-bootstrap.php
+    ignoreErrors:
+        - '#Dynamic call to static method PHPUnit\\Framework\\Assert.*#'
