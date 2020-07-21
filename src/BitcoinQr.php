@@ -72,8 +72,7 @@ class BitcoinQr
     private function updateText(): void
     {
         $uri = 'bitcoin:' . $this->getAddress();
-        $params =
-            $this->getParam('amount', $this->getAmountString()) .
+        $params = $this->getParam('amount', $this->getAmountString()) .
             $this->getParam('label', $this->getLabel()) .
             $this->getParam('message', $this->getMessage());
 
