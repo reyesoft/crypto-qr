@@ -77,7 +77,7 @@ class BitcoinQr
             $this->getParam('message', $this->getMessage());
 
         $this->getQrCode()->setText(
-            $uri . (!empty($params) ? '?' . substr($params, 1) : '')
+            $uri . ($params !== '' ? '?' . substr($params, 1) : '')
         );
     }
 
@@ -101,7 +101,7 @@ class BitcoinQr
         $amount = $this->getAmount();
         $string = (string) $amount;
 
-        if (preg_match('~\.(\d+)E([+-])?(\d+)~', $string, $matches)) {
+        if (preg_match('~\.(\d+)E([+-])?(\d+)~', $string, $matches) === 1) {
             $decimals = $matches[2] === '-' ? strlen($matches[1]) + $matches[3] : 0;
             $string = number_format($amount, $decimals, '.', '');
         }

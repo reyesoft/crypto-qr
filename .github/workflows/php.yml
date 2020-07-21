@@ -8,9 +8,6 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    - name: Install dependencies
-      run: php -v
-
     - name: Validate composer.json and composer.lock
       run: composer validate
 
@@ -27,6 +24,9 @@ jobs:
 
     - name: CI
       run: composer ci
+
+    - name: PHPStan
+      run: composer phpstan
 
     - name: Run tests
       run: composer coverage
