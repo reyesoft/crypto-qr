@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 1997-2018 Reyesoft <info@reyesoft.com>.
+ * Copyright (C) 1997-2020 Reyesoft <info@reyesoft.com>.
  *
  * This file is part of CryptoQr. CryptoQr can not be copied and/or
  * distributed without the express permission of Reyesoft
@@ -14,13 +14,17 @@ use CryptoQr\BitcoinQr;
 use PHPUnit\Framework\TestCase;
 use Zxing\QrReader;
 
-class BitcoinQrTest extends TestCase
+/**
+ * @internal
+ * @covers \CryptoQr\BitcoinQr
+ */
+final class BitcoinQrTest extends TestCase
 {
     public function testBitcoinQrAddress(): void
     {
         $qr = new BitcoinQr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
         $pngData = $qr->getQrCode()->writeString();
-        $this->assertInternalType('string', $pngData);
+        $this->assertIsString($pngData);
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame('bitcoin:34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY', $reader->text());
     }
@@ -31,7 +35,7 @@ class BitcoinQrTest extends TestCase
         $qr = new BitcoinQr($address);
         $qr->setLabel('Caritas');
         $pngData = $qr->getQrCode()->writeString();
-        $this->assertInternalType('string', $pngData);
+        $this->assertIsString($pngData);
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame('bitcoin:' . $address .
                                     '?label=Caritas', $reader->text());
@@ -43,7 +47,7 @@ class BitcoinQrTest extends TestCase
         $qr->setAmount(20.3);
         $qr->setLabel('Caritas');
         $pngData = $qr->getQrCode()->writeString();
-        $this->assertInternalType('string', $pngData);
+        $this->assertIsString($pngData);
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame(
             'bitcoin:34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY?amount=20.3&label=Caritas',
@@ -59,7 +63,7 @@ class BitcoinQrTest extends TestCase
         $qr->setAmount(0.000023456789);
         $qr->setMessage($message);
         $pngData = $qr->getQrCode()->writeString();
-        $this->assertInternalType('string', $pngData);
+        $this->assertIsString($pngData);
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame(
             'bitcoin:34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY?amount=0.000023456789' .
@@ -74,7 +78,7 @@ class BitcoinQrTest extends TestCase
         $qr = new BitcoinQr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
         $qr->setMessage($message);
         $pngData = $qr->getQrCode()->writeString();
-        $this->assertInternalType('string', $pngData);
+        $this->assertIsString($pngData);
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame(
             'bitcoin:34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY' .
@@ -95,6 +99,6 @@ class BitcoinQrTest extends TestCase
 
         $image = imagecreatefromstring(file_get_contents($filename));
 
-        $this->assertInternalType('resource', $image);
+        $this->assertIsResource($image);
     }
 }
