@@ -11,9 +11,17 @@ jobs:
     - name: Validate composer.json and composer.lock
       run: composer validate
 
+    - name: Cache dependencies installed with composer
+      uses: actions/cache@v1.0.2
+      with:
+        path: ~/.composer/cache
+        key: php7.2-composer-locked-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          php7.2-composer-locked-
+
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
-    
+
     - name: CI
       run: composer ci
 
