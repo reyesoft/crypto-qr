@@ -16,10 +16,9 @@ use Zxing\QrReader;
 
 /**
  * @internal
- * @covers \CryptoQr\BitcoinQr
  * @covers \CryptoQr\CryptoQr
  */
-final class BitcoinQrTest extends TestCase
+final class CryptoQrTest extends TestCase
 {
     public function testBitcoinQrAddress(): void
     {

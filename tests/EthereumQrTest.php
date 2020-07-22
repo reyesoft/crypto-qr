@@ -10,89 +10,88 @@ declare(strict_types=1);
 
 namespace CryptoQr\Tests;
 
-use CryptoQr\BitcoinQr;
+use CryptoQr\EthereumQr;
 use PHPUnit\Framework\TestCase;
 use Zxing\QrReader;
 
 /**
  * @internal
- * @covers \CryptoQr\BitcoinQr
- * @covers \CryptoQr\CryptoQr
+ * @covers \CryptoQr\EthereumQr
  */
-final class BitcoinQrTest extends TestCase
+final class EthereumQrTest extends TestCase
 {
-    public function testBitcoinQrAddress(): void
+    public function testEthereumQrAddress(): void
     {
-        $qr = new BitcoinQr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
+        $qr = new EthereumQr('0xe8ecDFacE0b274042aAD072149eEc3e232586499');
         $pngData = $qr->getQrCode()->writeString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
-        $this->assertSame('bitcoin:34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY', $reader->text());
+        $this->assertSame('ethereum:0xe8ecDFacE0b274042aAD072149eEc3e232586499', $reader->text());
     }
 
-    public function testBitcoinQrWithLabel(): void
+    public function testEthereumQrWithLabel(): void
     {
-        $address = '34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY';
-        $qr = new BitcoinQr($address);
+        $address = '0xe8ecDFacE0b274042aAD072149eEc3e232586499';
+        $qr = new EthereumQr($address);
         $qr->setLabel('Caritas');
         $pngData = $qr->getQrCode()->writeString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
-        $this->assertSame('bitcoin:' . $address .
+        $this->assertSame('ethereum:' . $address .
                                     '?label=Caritas', $reader->text());
     }
 
-    public function testBitcoinQrWithRequestBtc(): void
+    public function testEthereumQrWithRequestEth(): void
     {
-        $qr = new BitcoinQr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
+        $qr = new EthereumQr('0xe8ecDFacE0b274042aAD072149eEc3e232586499');
         $qr->setAmount(20.3);
         $qr->setLabel('Caritas');
         $pngData = $qr->getQrCode()->writeString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame(
-            'bitcoin:34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY?amount=20.3&label=Caritas',
+            'ethereum:0xe8ecDFacE0b274042aAD072149eEc3e232586499?amount=20.3&label=Caritas',
             $reader->text()
         );
     }
 
-    public function testBitcoinQrWithRequestAndMessage(): void
+    public function testEthereumQrWithRequestAndMessage(): void
     {
-        $address = '34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY';
+        $address = '0xe8ecDFacE0b274042aAD072149eEc3e232586499';
         $message = ('Donation for project xyz');
-        $qr = new BitcoinQr($address);
+        $qr = new EthereumQr($address);
         $qr->setAmount(0.000023456789);
         $qr->setMessage($message);
         $pngData = $qr->getQrCode()->writeString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame(
-            'bitcoin:34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY?amount=0.000023456789' .
+            'ethereum:0xe8ecDFacE0b274042aAD072149eEc3e232586499?amount=0.000023456789' .
             '&message=Donation%20for%20project%20xyz',
             $reader->text()
         );
     }
 
-    public function testBitcoinQrWithMessage(): void
+    public function testEthereumQrWithMessage(): void
     {
         $message = 'Donation for project xyz';
-        $qr = new BitcoinQr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
+        $qr = new EthereumQr('0xe8ecDFacE0b274042aAD072149eEc3e232586499');
         $qr->setMessage($message);
         $pngData = $qr->getQrCode()->writeString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame(
-            'bitcoin:34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY' .
+            'ethereum:0xe8ecDFacE0b274042aAD072149eEc3e232586499' .
             '?message=Donation%20for%20project%20xyz',
             $reader->text()
         );
     }
 
-    public function testWriteBitcoinQrFile(): void
+    public function testWriteEthereumQrFile(): void
     {
         $filename = sys_get_temp_dir() . '/bitcoin-qr-code.png';
 
-        $qr = new BitcoinQr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
+        $qr = new EthereumQr('0xe8ecDFacE0b274042aAD072149eEc3e232586499');
         $qr->setAmount(80);
         $qr->setLabel('Caritas');
         $qr->setMessage('Donation for project xyz');
