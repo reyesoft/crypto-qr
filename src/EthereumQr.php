@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace CryptoQr;
 
-class BitcoinQr extends CryptoQr
+class EthereumQr extends CryptoQr
 {
     protected function getAddressProtocol(): string
     {
-        return 'bitcoin';
+        return 'ethereum';
     }
 }
