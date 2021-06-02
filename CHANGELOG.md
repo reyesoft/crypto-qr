@@ -8,5 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.1] - 2021-06-02
 
+### Changed
+- Minimal PHP version: 7.3.
+
 ### Fixed
 - Crypto QR without protocol return only address.
