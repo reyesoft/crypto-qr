@@ -49,3 +49,16 @@ $qr->getQrCode()->writeFile(__DIR__.'/qrcode.png');
 
 ![bitcoin qr](https://user-images.githubusercontent.com/938894/44047859-1c4b94b0-9f06-11e8-85d7-ea7d3728691c.png "Bitcoin QR generated with BitcoinQr library")
 
+
+## Testing
+
+```bash
+composer test
+sh autofix.sh
+```
+
+### PHP 7.3
+
+```bash
+docker run -it --rm --name php73 -e PHP_EXTENSIONS="gd" -v "$PWD":/usr/src/app thecodingmachine/php:7.3-v4-cli bash
+```

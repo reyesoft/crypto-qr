@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace CryptoQr\Tests;
 
 use CryptoQr\BitcoinQr;
+use CryptoQr\CryptoQr;
 use PHPUnit\Framework\TestCase;
 use Zxing\QrReader;
 
@@ -27,6 +28,16 @@ final class CryptoQrTest extends TestCase
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame('bitcoin:34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY', $reader->text());
+    }
+
+    public function testQrAddressWithoutProtocol(): void
+    {
+        $qr = new CryptoQr('TLPF4HgzmJgQc2oDmR8Msxq4LeUfkA4n4W');
+
+        $pngData = $qr->getQrCode()->writeString();
+
+        $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
+        $this->assertSame('TLPF4HgzmJgQc2oDmR8Msxq4LeUfkA4n4W', $reader->text());
     }
 
     public function testBitcoinQrWithLabel(): void
