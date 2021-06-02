@@ -20,7 +20,7 @@ use Zxing\QrReader;
  */
 final class QrTest extends TestCase
 {
-    public function testBitcoinQrAddress(): void
+    public function testQrAddress(): void
     {
         $qr = new Qr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
         $pngData = $qr->getQrCode()->writeString();

@@ -53,6 +53,9 @@
         "coverage": [
             "phpdbg -d memory_limit=-1 -qrr ./vendor/bin/phpunit tests/",
             "php ./vendor/reyesoft/ci/tools/coverage-checker.php ./bootstrap/cache/clover.xml 100"
+        ],
+        "test": [
+            "./vendor/bin/phpunit -d memory_limit=-1"
         ]
     }
 }
