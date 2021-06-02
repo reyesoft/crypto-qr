@@ -55,7 +55,7 @@ class CryptoQr extends Qr
 
     protected function updateText(): void
     {
-        $uri = empty($this->getAddressProtocol()) ? '' : $this->getAddressProtocol();
+        $uri = empty($this->getAddressProtocol()) ? '' : $this->getAddressProtocol() . ':';
         $uri .= $this->getAddress();
         $params = $this->getParam('amount', $this->getAmountString()) .
             $this->getParam('label', $this->getLabel()) .
