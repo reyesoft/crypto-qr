@@ -8,6 +8,13 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.3'
+        extensions: xdebug, soap
+        coverage: xdebug
+
     - name: vvv
       run: php -v
 
