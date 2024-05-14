@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace CryptoQr;
 
-class DefaultQr
+class DefaultQr extends CryptoQr
 {
     protected function getAddressProtocol(): string
     {
