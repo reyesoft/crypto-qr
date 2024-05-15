@@ -16,16 +16,17 @@ use Zxing\QrReader;
 
 /**
  * @internal
- * @coversNothing
+ * @covers \CryptoQr\DefaultQr
  */
 final class DefaultQrTest extends TestCase
 {
     public function testQrAddress(): void
     {
-        $qr = new Qr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
+        $address = '00020101021226790014br.gov.bcb.pix2557brcode.starkinfra.com/v2/e31f78164ecb4deb9c7efce0bcba7a5b5204000053039865802BR5925Smartpay Servicos Digitai6013Florianopolis62070503***6304CC0F';
+        $qr = new Qr(urldecode($address));
         $pngData = $qr->getQrCode()->writeString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
-        $this->assertSame('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY', $reader->text());
+        $this->assertSame($address, $reader->text());
     }
 }

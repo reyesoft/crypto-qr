@@ -32,7 +32,9 @@ class Qr
 
     public function setAddress(string $address): void
     {
-        $this->address = $address;
+        $this->address = urldecode($address);
+        $this->address = str_replace('%2E', '.', $this->address);
+        $this->address = str_replace('%2D', '-', $this->address);
         $this->updateText();
     }
 
