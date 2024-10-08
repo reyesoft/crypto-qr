@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace CryptoQr;
 
+use Endroid\QrCode\QrCode;
+
 class CryptoQr extends Qr
 {
     /**
@@ -26,6 +28,10 @@ class CryptoQr extends Qr
      * @var string
      */
     protected $message = '';
+    /**
+     * @var string
+     */
+    protected $qr_code;
 
     /**
      * @codeCoverageIgnore
@@ -61,9 +67,7 @@ class CryptoQr extends Qr
             $this->getParam('label', $this->getLabel()) .
             $this->getParam('message', $this->getMessage());
 
-        $this->getQrCode()->setText(
-            $uri . ($params !== '' ? '?' . substr($params, 1) : '')
-        );
+        $this->qr_code = new QrCode($uri . ($params !== '' ? '?' . substr($params, 1) : ''));
     }
 
     private function getParam(string $label, string $value): string

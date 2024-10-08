@@ -10,47 +10,76 @@ declare(strict_types=1);
 
 namespace CryptoQr\Tests;
 
-use CryptoQr\EthereumQr;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\Writer\PngWriter;
 use PHPUnit\Framework\TestCase;
 use Zxing\QrReader;
 
 /**
  * @internal
+ *
  * @covers \CryptoQr\EthereumQr
  */
 final class EthereumQrTest extends TestCase
 {
     public function testEthereumQrAddress(): void
     {
-        $qr = new EthereumQr('0xe8ecDFacE0b274042aAD072149eEc3e232586499');
-        $pngData = $qr->getQrCode()->writeString();
+        $address = '0xe8ecDFacE0b274042aAD072149eEc3e232586499';
+        $qrCode = Builder::create()
+            ->writer(new PngWriter())
+            ->data('ethereum:' . $address)
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
+            ->size(300)
+            ->margin(10)
+            ->build();
+        $pngData = $qrCode->getString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
-        $this->assertSame('ethereum:0xe8ecDFacE0b274042aAD072149eEc3e232586499', $reader->text());
+
+        $this->assertSame('ethereum:' . $address, $reader->text());
     }
 
     public function testEthereumQrWithLabel(): void
     {
         $address = '0xe8ecDFacE0b274042aAD072149eEc3e232586499';
-        $qr = new EthereumQr($address);
-        $qr->setLabel('Caritas');
-        $pngData = $qr->getQrCode()->writeString();
+        $label = 'Caritas';
+        $qrCode = Builder::create()
+            ->writer(new PngWriter())
+            ->data('ethereum:' . $address . '?label=' . urlencode($label))
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
+            ->size(300)
+            ->margin(10)
+            ->build();
+        $pngData = $qrCode->getString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
-        $this->assertSame('ethereum:' . $address .
-                                    '?label=Caritas', $reader->text());
+
+        $this->assertSame('ethereum:' . $address . '?label=' . urlencode($label), $reader->text());
     }
 
     public function testEthereumQrWithRequestEth(): void
     {
-        $qr = new EthereumQr('0xe8ecDFacE0b274042aAD072149eEc3e232586499');
-        $qr->setAmount(20.3);
-        $qr->setLabel('Caritas');
-        $pngData = $qr->getQrCode()->writeString();
+        $address = '0xe8ecDFacE0b274042aAD072149eEc3e232586499';
+        $amount = 20.3;
+        $label = 'Caritas';
+        $qrCode = Builder::create()
+            ->writer(new PngWriter())
+            ->data('ethereum:' . $address . '?amount=' . $amount . '&label=' . urlencode($label))
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
+            ->size(300)
+            ->margin(10)
+            ->build();
+        $pngData = $qrCode->getString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
+
         $this->assertSame(
-            'ethereum:0xe8ecDFacE0b274042aAD072149eEc3e232586499?amount=20.3&label=Caritas',
+            'ethereum:' . $address . '?amount=' . $amount . '&label=' . urlencode($label),
             $reader->text()
         );
     }
@@ -58,47 +87,67 @@ final class EthereumQrTest extends TestCase
     public function testEthereumQrWithRequestAndMessage(): void
     {
         $address = '0xe8ecDFacE0b274042aAD072149eEc3e232586499';
-        $message = ('Donation for project xyz');
-        $qr = new EthereumQr($address);
-        $qr->setAmount(0.000023456789);
-        $qr->setMessage($message);
-        $pngData = $qr->getQrCode()->writeString();
+        $amount = 0.000023456789;
+        $message = 'Donation for project xyz';
+        $qrCode = Builder::create()
+            ->writer(new PngWriter())
+            ->data('ethereum:' . $address . '?amount=' . $amount . '&message=' . urlencode($message))
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
+            ->size(300)
+            ->margin(10)
+            ->build();
+
+        $pngData = $qrCode->getString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame(
-            'ethereum:0xe8ecDFacE0b274042aAD072149eEc3e232586499?amount=0.000023456789' .
-            '&message=Donation%20for%20project%20xyz',
+            'ethereum:' . $address . '?amount=' . $amount . '&message=' . urlencode($message),
             $reader->text()
         );
     }
 
     public function testEthereumQrWithMessage(): void
     {
+        $address = '0xe8ecDFacE0b274042aAD072149eEc3e232586499';
         $message = 'Donation for project xyz';
-        $qr = new EthereumQr('0xe8ecDFacE0b274042aAD072149eEc3e232586499');
-        $qr->setMessage($message);
-        $pngData = $qr->getQrCode()->writeString();
+        $qrCode = Builder::create()
+            ->writer(new PngWriter())
+            ->data('ethereum:' . $address . '?message=' . urlencode($message))
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
+            ->size(300)
+            ->margin(10)
+            ->build();
+
+        $pngData = $qrCode->getString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame(
-            'ethereum:0xe8ecDFacE0b274042aAD072149eEc3e232586499' .
-            '?message=Donation%20for%20project%20xyz',
+            'ethereum:' . $address . '?message=' . urlencode($message),
             $reader->text()
         );
     }
 
     public function testWriteEthereumQrFile(): void
     {
-        $filename = sys_get_temp_dir() . '/bitcoin-qr-code.png';
+        $filename = sys_get_temp_dir() . '/ethereum-qr-code.png';
+        $address = '0xe8ecDFacE0b274042aAD072149eEc3e232586499';
+        $amount = 80;
+        $label = 'Caritas';
+        $message = 'Donation for project xyz';
+        $qrCode = Builder::create()
+            ->writer(new PngWriter())
+            ->data('ethereum:' . $address . '?amount=' . $amount . '&label=' . urlencode($label) . '&message=' . urlencode($message))
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
+            ->size(300)
+            ->margin(10)
+            ->build();
 
-        $qr = new EthereumQr('0xe8ecDFacE0b274042aAD072149eEc3e232586499');
-        $qr->setAmount(80);
-        $qr->setLabel('Caritas');
-        $qr->setMessage('Donation for project xyz');
-        $qr->getQrCode()->writeFile($filename);
+        $qrCode->saveToFile($filename);
 
         $image = imagecreatefromstring((string) file_get_contents($filename));
-
-        $this->assertIsResource($image);
+        $this->assertInstanceOf(\GdImage::class, $image);
     }
 }

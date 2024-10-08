@@ -26,7 +26,7 @@ class Qr
 
     public function __construct(string $address = '')
     {
-        $this->qr_code = new QrCode();
+        $this->qr_code = new QrCode($address);
         $this->setAddress($address);
     }
 
@@ -40,7 +40,7 @@ class Qr
     {
         $uri = $this->getAddress();
 
-        $this->getQrCode()->setText($uri);
+        $this->getQrCode()->setData($uri);
     }
 
     public function getAddress(): string
