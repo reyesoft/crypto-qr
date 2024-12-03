@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": "^7.3|^8.1",
+        "php": "^8.1",
         "endroid/qr-code": "^5.0",
         "ext-gd": "*",
         "khanamiryan/qrcode-detector-decoder": "^2.0"
@@ -26,10 +26,10 @@
         "codedungeon/phpunit-result-printer": "0.30.0"
     },
     "autoload": {
-      "classmap": [
+        "classmap": [
             "src/"
-      ],
-      "psr-4": {
+        ],
+        "psr-4": {
             "CryptoQr\\": "src/"
         }
     },
