@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (C) 1997-2020 Reyesoft <info@reyesoft.com>.
  *
