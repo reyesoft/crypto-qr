@@ -30,7 +30,7 @@ jobs:
           php7.3-composer-locked-
 
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest
+      run: composer install --prefer-dist --no-progress
 
     - name: CI
       run: composer ci
