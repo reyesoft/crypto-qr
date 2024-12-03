@@ -81,9 +81,10 @@ class CryptoQr extends Qr
         $amount = $this->getAmount();
         $string = (string) $amount;
 
+        /** @var array{array, $matches int, string, int} */
         if (preg_match('~\.(\d+)E([+-])?(\d+)~', $string, $matches) === 1) {
             $decimals = $matches[2] === '-' ? strlen($matches[1]) + $matches[3] : 0;
-            $string = number_format($amount, $decimals, '.', '');
+            $string = number_format($amount, (int) $decimals, '.', '');
         }
 
         return $string;
