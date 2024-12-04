@@ -174,6 +174,7 @@ final class CryptoQrTest extends TestCase
         $qrCode->saveToFile($filename);
 
         $image = imagecreatefromstring((string) file_get_contents($filename));
-        $this->assertNotFalse($image);  // Verifica que la imagen se haya cargado correctamente
+
+        $this->assertNotFalse($image);
     }
 }

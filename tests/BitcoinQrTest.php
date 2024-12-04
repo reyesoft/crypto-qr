@@ -162,6 +162,6 @@ final class BitcoinQrTest extends TestCase
 
         $image = imagecreatefromstring((string) file_get_contents($filename));
 
-        $this->assertInstanceOf(\GdImage::class, $image);
+        $this->assertNotFalse($image);
     }
 }

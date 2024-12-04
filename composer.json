@@ -20,7 +20,7 @@
         "ext-gd": "*"
     },
     "require-dev": {
-        "reyesoft/ci": "1.4.6",
+        "reyesoft/ci": "2.0.1",
         "phpunit/phpunit": "^9.1.5",
         "codedungeon/phpunit-result-printer": "0.30.0"
     },

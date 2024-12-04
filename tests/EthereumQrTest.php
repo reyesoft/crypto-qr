@@ -148,6 +148,7 @@ final class EthereumQrTest extends TestCase
         $qrCode->saveToFile($filename);
 
         $image = imagecreatefromstring((string) file_get_contents($filename));
-        $this->assertInstanceOf(\GdImage::class, $image);
+
+        $this->assertNotFalse($image);
     }
 }
