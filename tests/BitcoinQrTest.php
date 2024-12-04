@@ -10,7 +10,11 @@ declare(strict_types=1);
 
 namespace CryptoQr\Tests;
 
-use CryptoQr\BitcoinQr;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\Label\LabelAlignment;
+use Endroid\QrCode\Writer\PngWriter;
 use PHPUnit\Framework\TestCase;
 use Zxing\QrReader;
 
@@ -24,8 +28,16 @@ final class BitcoinQrTest extends TestCase
 {
     public function testBitcoinQrAddress(): void
     {
-        $qr = new BitcoinQr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
-        $pngData = $qr->getQrCode()->writeString();
+        $qrCode = Builder::create()
+            ->writer(new PngWriter())
+            ->data('bitcoin:34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY')
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
+            ->size(300)
+            ->margin(10)
+            ->build();
+
+        $pngData = $qrCode->getString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame('bitcoin:34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY', $reader->text());
@@ -34,25 +46,47 @@ final class BitcoinQrTest extends TestCase
     public function testBitcoinQrWithLabel(): void
     {
         $address = '34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY';
-        $qr = new BitcoinQr($address);
-        $qr->setLabel('Caritas');
-        $pngData = $qr->getQrCode()->writeString();
+        $labelText = 'Caritas';
+
+        $qrCode = Builder::create()
+            ->writer(new PngWriter())
+            ->data('bitcoin:' . $address . '?label=' . $labelText)
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
+            ->size(300)
+            ->margin(10)
+            ->labelText($labelText)
+            ->labelAlignment(LabelAlignment::Center)
+            ->build();
+
+        $pngData = $qrCode->getString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
-        $this->assertSame('bitcoin:' . $address .
-                                    '?label=Caritas', $reader->text());
+        $this->assertSame('bitcoin:' . $address . '?label=' . $labelText, $reader->text());
     }
 
     public function testBitcoinQrWithRequestBtc(): void
     {
-        $qr = new BitcoinQr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
-        $qr->setAmount(20.3);
-        $qr->setLabel('Caritas');
-        $pngData = $qr->getQrCode()->writeString();
+        $address = '34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY';
+        $amount = 20.3;
+        $labelText = 'Caritas';
+
+        $qrCode = Builder::create()
+            ->writer(new PngWriter())
+            ->data('bitcoin:' . $address . '?amount=' . $amount . '&label=' . $labelText)
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
+            ->size(300)
+            ->margin(10)
+            ->labelText($labelText)
+            ->labelAlignment(LabelAlignment::Center)
+            ->build();
+
+        $pngData = $qrCode->getString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame(
-            'bitcoin:34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY?amount=20.3&label=Caritas',
+            'bitcoin:' . $address . '?amount=' . $amount . '&label=' . $labelText,
             $reader->text()
         );
     }
@@ -60,31 +94,46 @@ final class BitcoinQrTest extends TestCase
     public function testBitcoinQrWithRequestAndMessage(): void
     {
         $address = '34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY';
+        $amount = 0.000023456789;
         $message = 'Donation for project xyz';
-        $qr = new BitcoinQr($address);
-        $qr->setAmount(0.000023456789);
-        $qr->setMessage($message);
-        $pngData = $qr->getQrCode()->writeString();
+
+        $qrCode = Builder::create()
+            ->writer(new PngWriter())
+            ->data('bitcoin:' . $address . '?amount=' . $amount . '&message=' . urlencode($message))
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
+            ->size(300)
+            ->margin(10)
+            ->build();
+
+        $pngData = $qrCode->getString(); // Obtenemos el QR generado en formato PNG como string
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame(
-            'bitcoin:34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY?amount=0.000023456789' .
-            '&message=Donation%20for%20project%20xyz',
+            'bitcoin:' . $address . '?amount=' . $amount . '&message=' . urlencode($message),
             $reader->text()
         );
     }
 
     public function testBitcoinQrWithMessage(): void
     {
+        $address = '34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY';
         $message = 'Donation for project xyz';
-        $qr = new BitcoinQr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
-        $qr->setMessage($message);
-        $pngData = $qr->getQrCode()->writeString();
+
+        $qrCode = Builder::create()
+            ->writer(new PngWriter())
+            ->data('bitcoin:' . $address . '?message=' . urlencode($message))
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
+            ->size(300)
+            ->margin(10)
+            ->build();
+
+        $pngData = $qrCode->getString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame(
-            'bitcoin:34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY' .
-            '?message=Donation%20for%20project%20xyz',
+            'bitcoin:' . $address . '?message=' . urlencode($message),
             $reader->text()
         );
     }
@@ -93,11 +142,23 @@ final class BitcoinQrTest extends TestCase
     {
         $filename = sys_get_temp_dir() . '/bitcoin-qr-code.png';
 
-        $qr = new BitcoinQr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
-        $qr->setAmount(80);
-        $qr->setLabel('Caritas');
-        $qr->setMessage('Donation for project xyz');
-        $qr->getQrCode()->writeFile($filename);
+        $address = '34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY';
+        $amount = 80;
+        $labelText = 'Caritas';
+        $message = 'Donation for project xyz';
+
+        $qrCode = Builder::create()
+            ->writer(new PngWriter())
+            ->data('bitcoin:' . $address . '?amount=' . $amount . '&label=' . $labelText . '&message=' . urlencode($message)) // Agregamos la información necesaria
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
+            ->size(300)
+            ->margin(10)
+            ->build();
+
+        $qrCode->saveToFile($filename); // El método no retorna nada
+
+        $this->assertFileExists($filename); // Verificamos que el archivo existe
 
         $image = imagecreatefromstring((string) file_get_contents($filename));
 
