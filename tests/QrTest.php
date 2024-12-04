@@ -24,7 +24,7 @@ final class QrTest extends TestCase
     public function testQrAddress(): void
     {
         $qr = new Qr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
-        $pngData = $qr->getQrCode()->writeString();
+        $pngData = $qr->getString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY', $reader->text());

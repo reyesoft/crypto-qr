@@ -25,7 +25,7 @@ final class CryptoQrTest extends TestCase
     public function testBitcoinQrAddress(): void
     {
         $qr = new BitcoinQr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
-        $pngData = $qr->getQrCode()->writeString();
+        $pngData = $qr->getString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame('bitcoin:34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY', $reader->text());
@@ -35,7 +35,7 @@ final class CryptoQrTest extends TestCase
     {
         $qr = new CryptoQr('TLPF4HgzmJgQc2oDmR8Msxq4LeUfkA4n4W');
 
-        $pngData = $qr->getQrCode()->writeString();
+        $pngData = $qr->getString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame('TLPF4HgzmJgQc2oDmR8Msxq4LeUfkA4n4W', $reader->text());
@@ -46,7 +46,7 @@ final class CryptoQrTest extends TestCase
         $address = '34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY';
         $qr = new BitcoinQr($address);
         $qr->setLabel('Caritas');
-        $pngData = $qr->getQrCode()->writeString();
+        $pngData = $qr->getString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame('bitcoin:' . $address .
@@ -58,7 +58,7 @@ final class CryptoQrTest extends TestCase
         $qr = new BitcoinQr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
         $qr->setAmount(20.3);
         $qr->setLabel('Caritas');
-        $pngData = $qr->getQrCode()->writeString();
+        $pngData = $qr->getString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame(
@@ -74,7 +74,7 @@ final class CryptoQrTest extends TestCase
         $qr = new BitcoinQr($address);
         $qr->setAmount(0.000023456789);
         $qr->setMessage($message);
-        $pngData = $qr->getQrCode()->writeString();
+        $pngData = $qr->getString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame(
@@ -89,7 +89,7 @@ final class CryptoQrTest extends TestCase
         $message = 'Donation for project xyz';
         $qr = new BitcoinQr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
         $qr->setMessage($message);
-        $pngData = $qr->getQrCode()->writeString();
+        $pngData = $qr->getString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame(
@@ -107,7 +107,7 @@ final class CryptoQrTest extends TestCase
         $qr->setAmount(80);
         $qr->setLabel('Caritas');
         $qr->setMessage('Donation for project xyz');
-        $qr->getQrCode()->writeFile($filename);
+        $qr->writeFile($filename);
 
         $image = imagecreatefromstring((string) file_get_contents($filename));
 

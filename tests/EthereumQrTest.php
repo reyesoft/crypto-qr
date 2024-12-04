@@ -24,7 +24,7 @@ final class EthereumQrTest extends TestCase
     public function testEthereumQrAddress(): void
     {
         $qr = new EthereumQr('0xe8ecDFacE0b274042aAD072149eEc3e232586499');
-        $pngData = $qr->getQrCode()->writeString();
+        $pngData = $qr->getString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame('ethereum:0xe8ecDFacE0b274042aAD072149eEc3e232586499', $reader->text());
@@ -35,7 +35,7 @@ final class EthereumQrTest extends TestCase
         $address = '0xe8ecDFacE0b274042aAD072149eEc3e232586499';
         $qr = new EthereumQr($address);
         $qr->setLabel('Caritas');
-        $pngData = $qr->getQrCode()->writeString();
+        $pngData = $qr->getString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame('ethereum:' . $address .
@@ -47,7 +47,7 @@ final class EthereumQrTest extends TestCase
         $qr = new EthereumQr('0xe8ecDFacE0b274042aAD072149eEc3e232586499');
         $qr->setAmount(20.3);
         $qr->setLabel('Caritas');
-        $pngData = $qr->getQrCode()->writeString();
+        $pngData = $qr->getString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame(
@@ -63,7 +63,7 @@ final class EthereumQrTest extends TestCase
         $qr = new EthereumQr($address);
         $qr->setAmount(0.000023456789);
         $qr->setMessage($message);
-        $pngData = $qr->getQrCode()->writeString();
+        $pngData = $qr->getString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame(
@@ -78,7 +78,7 @@ final class EthereumQrTest extends TestCase
         $message = 'Donation for project xyz';
         $qr = new EthereumQr('0xe8ecDFacE0b274042aAD072149eEc3e232586499');
         $qr->setMessage($message);
-        $pngData = $qr->getQrCode()->writeString();
+        $pngData = $qr->getString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame(
@@ -96,7 +96,7 @@ final class EthereumQrTest extends TestCase
         $qr->setAmount(80);
         $qr->setLabel('Caritas');
         $qr->setMessage('Donation for project xyz');
-        $qr->getQrCode()->writeFile($filename);
+        $qr->writeFile($filename);
 
         $image = imagecreatefromstring((string) file_get_contents($filename));
 
