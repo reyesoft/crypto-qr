@@ -101,6 +101,6 @@ final class BitcoinQrTest extends TestCase
 
         $image = imagecreatefromstring((string) file_get_contents($filename));
 
-        $this->assertIsResource($image);
+        $this->assertNotFalse($image);
     }
 }
