@@ -22,6 +22,7 @@
     "require-dev": {
         "reyesoft/ci": "2.0.1",
         "phpunit/phpunit": "^9.1.5",
+        "zxing/qr-reader": "1.2",
         "codedungeon/phpunit-result-printer": "0.30.0"
     },
     "autoload": {
