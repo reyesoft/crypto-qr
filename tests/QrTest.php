@@ -16,6 +16,7 @@ use Zxing\QrReader;
 
 /**
  * @internal
+ *
  * @covers \CryptoQr\Qr
  */
 final class QrTest extends TestCase

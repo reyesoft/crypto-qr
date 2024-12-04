@@ -16,6 +16,7 @@ use Zxing\QrReader;
 
 /**
  * @internal
+ *
  * @covers \CryptoQr\EthereumQr
  */
 final class EthereumQrTest extends TestCase
@@ -58,7 +59,7 @@ final class EthereumQrTest extends TestCase
     public function testEthereumQrWithRequestAndMessage(): void
     {
         $address = '0xe8ecDFacE0b274042aAD072149eEc3e232586499';
-        $message = ('Donation for project xyz');
+        $message = 'Donation for project xyz';
         $qr = new EthereumQr($address);
         $qr->setAmount(0.000023456789);
         $qr->setMessage($message);
@@ -99,6 +100,6 @@ final class EthereumQrTest extends TestCase
 
         $image = imagecreatefromstring((string) file_get_contents($filename));
 
-        $this->assertIsResource($image);
+        $this->assertNotFalse($image);
     }
 }

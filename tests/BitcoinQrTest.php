@@ -16,6 +16,7 @@ use Zxing\QrReader;
 
 /**
  * @internal
+ *
  * @covers \CryptoQr\BitcoinQr
  * @covers \CryptoQr\CryptoQr
  */
@@ -59,7 +60,7 @@ final class BitcoinQrTest extends TestCase
     public function testBitcoinQrWithRequestAndMessage(): void
     {
         $address = '34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY';
-        $message = ('Donation for project xyz');
+        $message = 'Donation for project xyz';
         $qr = new BitcoinQr($address);
         $qr->setAmount(0.000023456789);
         $qr->setMessage($message);
@@ -100,6 +101,6 @@ final class BitcoinQrTest extends TestCase
 
         $image = imagecreatefromstring((string) file_get_contents($filename));
 
-        $this->assertIsResource($image);
+        $this->assertNotFalse($image);
     }
 }
