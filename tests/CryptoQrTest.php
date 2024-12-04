@@ -111,6 +111,7 @@ final class CryptoQrTest extends TestCase
 
         $image = imagecreatefromstring((string) file_get_contents($filename));
 
-        $this->assertIsResource($image);
+//        $this->assertIsResource($image);
+        $this->assertNotFalse($image);
     }
 }
