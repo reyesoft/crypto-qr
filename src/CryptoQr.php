@@ -61,7 +61,7 @@ class CryptoQr extends Qr
             $this->getParam('label', $this->getLabel()) .
             $this->getParam('message', $this->getMessage());
 
-        $this->getQrCode()->setText(
+        $this->getQrCode()->setData(
             $uri . ($params !== '' ? '?' . substr($params, 1) : '')
         );
     }
