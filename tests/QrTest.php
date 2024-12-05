@@ -42,7 +42,7 @@ final class QrTest extends TestCase
     public function testSetQrLogo(): void
     {
         $qr = new Qr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
-        $qr->setLogo(new Logo(__DIR__ . '/logo.png'));
+        $qr->setLogo(new Logo(__DIR__ . '/resources/img/BTC.png'));
         $pngUri = $qr->getDataUri();
 
         $this->assertNotEmpty($pngUri);
