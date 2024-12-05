@@ -10,8 +10,10 @@ declare(strict_types=1);
 
 namespace CryptoQr;
 
+use Endroid\QrCode\Logo\LogoInterface;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\Result\ResultInterface;
 
 class Qr
 {
@@ -23,7 +25,10 @@ class Qr
      * @var PngWriter
      */
     protected $writer;
-
+    /**
+     * @var LogoInterface|null
+     */
+    protected $logo;
     /**
      * @var QrCode
      */
@@ -54,28 +59,33 @@ class Qr
         return $this->address;
     }
 
+    public function setLogo(LogoInterface $logo): void
+    {
+        $this->logo = $logo;
+    }
+
     public function getQrCode(): QrCode
     {
         return $this->qr_code;
     }
 
+    private function writerResult(): ResultInterface
+    {
+        return $this->writer->write($this->getQrCode(), $this->logo);
+    }
+
     public function getString(): string
     {
-        $result = $this->writer->write($this->getQrCode());
-
-        return $result->getString();
+        return $this->writerResult()->getString();
     }
 
     public function getDataUri(): string
     {
-        $result = $this->writer->write($this->getQrCode());
-
-        return $result->getDataUri();
+        return $this->writerResult()->getDataUri();
     }
 
     public function writeFile(string $filename): void
     {
-        $result = $this->writer->write($this->getQrCode());
-        $result->saveToFile($filename);
+        $this->writerResult()->saveToFile($filename);
     }
 }
