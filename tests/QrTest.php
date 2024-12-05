@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace CryptoQr\Tests;
 
 use CryptoQr\Qr;
+use Endroid\QrCode\Logo\Logo;
 use PHPUnit\Framework\TestCase;
 use Zxing\QrReader;
 
@@ -33,6 +34,15 @@ final class QrTest extends TestCase
     public function testQrUri(): void
     {
         $qr = new Qr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
+        $pngUri = $qr->getDataUri();
+
+        $this->assertNotEmpty($pngUri);
+    }
+
+    public function testSetQrLogo(): void
+    {
+        $qr = new Qr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
+        $qr->setLogo(new Logo(__DIR__ . '/logo.png'));
         $pngUri = $qr->getDataUri();
 
         $this->assertNotEmpty($pngUri);
