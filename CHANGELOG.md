@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2025-12-29
+
+### Changed
+- Drop PHP 8.1 and prepare for PHP 8.4.
+- endroid/qr-code for PHP 8.4+ support.
+
 ## [2.0.0] - 2024-12-05
 
 ### Updated

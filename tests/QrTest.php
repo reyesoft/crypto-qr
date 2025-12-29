@@ -43,6 +43,7 @@ final class QrTest extends TestCase
     {
         $qr = new Qr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
         $qr->setLogo(new Logo(__DIR__ . '/resources/img/BTC.png'));
+        $qr->setSize(200);
         $pngUri = $qr->getDataUri();
 
         $this->assertNotEmpty($pngUri);
