@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace CryptoQr;
 
+use Endroid\QrCode\Writer\Result\ResultInterface;
+
 class CryptoQr extends Qr
 {
     /**
@@ -38,32 +40,36 @@ class CryptoQr extends Qr
     public function setLabel(string $label): void
     {
         $this->label = $label;
-        $this->updateText();
     }
 
     public function setAmount(float $amount): void
     {
         $this->amount = $amount;
-        $this->updateText();
     }
 
     public function setMessage(string $message): void
     {
         $this->message = $message;
-        $this->updateText();
     }
 
-    protected function updateText(): void
+    private function buildData(): void
     {
         $uri = empty($this->getAddressProtocol()) ? '' : $this->getAddressProtocol() . ':';
         $uri .= $this->getAddress();
-        $params = $this->getParam('amount', $this->getAmountString()) .
-            $this->getParam('label', $this->getLabel()) .
-            $this->getParam('message', $this->getMessage());
+        $params = $this->getParam('amount', $this->getAmountString())
+            . $this->getParam('label', $this->getLabel())
+            . $this->getParam('message', $this->getMessage());
 
-        $this->getQrCode()->setData(
+        $this->setAddress(
             $uri . ($params !== '' ? '?' . substr($params, 1) : '')
         );
+    }
+
+    protected function writerResult(): ResultInterface
+    {
+        $this->buildData();
+
+        return parent::writerResult();
     }
 
     private function getParam(string $label, string $value): string

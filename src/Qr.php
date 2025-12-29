@@ -18,10 +18,6 @@ use Endroid\QrCode\Writer\Result\ResultInterface;
 class Qr
 {
     /**
-     * @var string
-     */
-    protected $address = '';
-    /**
      * @var PngWriter
      */
     protected $writer;
@@ -29,14 +25,11 @@ class Qr
      * @var LogoInterface|null
      */
     protected $logo;
-    /**
-     * @var QrCode
-     */
-    protected $qr_code;
+    protected ?int $size = 300;
 
-    public function __construct(string $address = '')
-    {
-        $this->qr_code = new QrCode($address);
+    public function __construct(
+        private string $address = ''
+    ) {
         $this->setAddress($address);
         $this->writer = new PngWriter();
     }
@@ -44,14 +37,6 @@ class Qr
     public function setAddress(string $address): void
     {
         $this->address = $address;
-        $this->updateText();
-    }
-
-    protected function updateText(): void
-    {
-        $uri = $this->getAddress();
-
-        $this->getQrCode()->setData($uri);
     }
 
     public function getAddress(): string
@@ -64,14 +49,15 @@ class Qr
         $this->logo = $logo;
     }
 
-    public function getQrCode(): QrCode
+    protected function writerResult(): ResultInterface
     {
-        return $this->qr_code;
-    }
-
-    private function writerResult(): ResultInterface
-    {
-        return $this->writer->write($this->getQrCode(), $this->logo);
+        return $this->writer->write(
+            new QrCode(
+                data: $this->address,
+                size: $this->size
+            ),
+            $this->logo
+        );
     }
 
     public function getString(): string

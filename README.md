@@ -57,8 +57,8 @@ composer test
 sh autofix.sh
 ```
 
-### PHP 7.3
+### PHP 8.4
 
 ```bash
-docker run -it --rm --name php73 -e PHP_EXTENSIONS="gd" -v "$PWD":/usr/src/app thecodingmachine/php:7.3-v4-cli bash
+docker run -it --rm --name php84 -e PHP_EXTENSIONS="gd" -v "$PWD":/usr/src/app thecodingmachine/php:8.4-v4-cli bash
 ```

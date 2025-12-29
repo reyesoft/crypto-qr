@@ -38,8 +38,8 @@ final class EthereumQrTest extends TestCase
         $pngData = $qr->getString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
-        $this->assertSame('ethereum:' . $address .
-                                    '?label=Caritas', $reader->text());
+        $this->assertSame('ethereum:' . $address
+                                    . '?label=Caritas', $reader->text());
     }
 
     public function testEthereumQrWithRequestEth(): void
@@ -67,8 +67,8 @@ final class EthereumQrTest extends TestCase
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame(
-            'ethereum:0xe8ecDFacE0b274042aAD072149eEc3e232586499?amount=0.000023456789' .
-            '&message=Donation%20for%20project%20xyz',
+            'ethereum:0xe8ecDFacE0b274042aAD072149eEc3e232586499?amount=0.000023456789'
+            . '&message=Donation%20for%20project%20xyz',
             $reader->text()
         );
     }
@@ -82,8 +82,8 @@ final class EthereumQrTest extends TestCase
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame(
-            'ethereum:0xe8ecDFacE0b274042aAD072149eEc3e232586499' .
-            '?message=Donation%20for%20project%20xyz',
+            'ethereum:0xe8ecDFacE0b274042aAD072149eEc3e232586499'
+            . '?message=Donation%20for%20project%20xyz',
             $reader->text()
         );
     }

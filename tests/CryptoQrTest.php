@@ -49,8 +49,8 @@ final class CryptoQrTest extends TestCase
         $pngData = $qr->getString();
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
-        $this->assertSame('bitcoin:' . $address .
-                                    '?label=Caritas', $reader->text());
+        $this->assertSame('bitcoin:' . $address
+                                    . '?label=Caritas', $reader->text());
     }
 
     public function testBitcoinQrWithRequestBtc(): void
@@ -78,8 +78,8 @@ final class CryptoQrTest extends TestCase
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame(
-            'bitcoin:34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY?amount=0.000023456789' .
-            '&message=Donation%20for%20project%20xyz',
+            'bitcoin:34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY?amount=0.000023456789'
+            . '&message=Donation%20for%20project%20xyz',
             $reader->text()
         );
     }
@@ -93,8 +93,8 @@ final class CryptoQrTest extends TestCase
 
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame(
-            'bitcoin:34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY' .
-            '?message=Donation%20for%20project%20xyz',
+            'bitcoin:34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY'
+            . '?message=Donation%20for%20project%20xyz',
             $reader->text()
         );
     }
