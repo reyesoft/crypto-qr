@@ -49,6 +49,11 @@ class Qr
         $this->logo = $logo;
     }
 
+    public function setSize(int $size): void
+    {
+        $this->size = $size;
+    }
+
     protected function writerResult(): ResultInterface
     {
         return $this->writer->write(
