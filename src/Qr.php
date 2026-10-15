@@ -52,13 +52,11 @@ class Qr
     {
         $image = $this->renderImage(1);
         $moduleCount = imagesx($image);
-        imagedestroy($image);
 
         $image = $this->renderImage((int) ceil($this->size / $moduleCount));
 
         if (imagesx($image) !== $this->size) {
             $scaled = imagescale($image, $this->size, $this->size);
-            imagedestroy($image);
 
             if ($scaled === false) {
                 throw new RuntimeException('Unable to scale QR image.');
@@ -70,7 +68,6 @@ class Qr
         ob_start();
         $written = imagepng($image);
         $png = ob_get_clean();
-        imagedestroy($image);
 
         if ($written === false || $png === false) {
             throw new RuntimeException('Unable to encode QR image as PNG.');

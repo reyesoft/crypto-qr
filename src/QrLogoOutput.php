@@ -50,6 +50,5 @@ class QrLogoOutput extends QRGdImagePNG
             $logoWidth,
             $logoHeight
         );
-        imagedestroy($logo);
     }
 }
