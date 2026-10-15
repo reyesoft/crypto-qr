@@ -50,7 +50,7 @@ class CryptoQr extends Qr
         $this->message = $message;
     }
 
-    private function buildData(): void
+    protected function getPayload(): string
     {
         $uri = empty($this->getAddressProtocol()) ? '' : $this->getAddressProtocol() . ':';
         $uri .= $this->getAddress();
@@ -58,16 +58,7 @@ class CryptoQr extends Qr
             . $this->getParam('label', $this->getLabel())
             . $this->getParam('message', $this->getMessage());
 
-        $this->setAddress(
-            $uri . ($params !== '' ? '?' . substr($params, 1) : '')
-        );
-    }
-
-    protected function writerResult(): string
-    {
-        $this->buildData();
-
-        return parent::writerResult();
+        return $uri . ($params !== '' ? '?' . substr($params, 1) : '');
     }
 
     private function getParam(string $label, string $value): string

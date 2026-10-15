@@ -35,9 +35,13 @@ final class QrTest extends TestCase
     {
         $qr = new Qr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
         $pngUri = $qr->getDataUri();
+        $pngData = base64_decode(substr($pngUri, 22), true);
 
         $this->assertStringStartsWith('data:image/png;base64,', $pngUri);
-        $this->assertNotFalse(imagecreatefromstring((string) base64_decode(substr($pngUri, 22))));
+        $this->assertNotFalse($pngData);
+        $this->assertSame("\x89PNG\r\n\x1a\n", substr((string) $pngData, 0, 8));
+        $this->assertNotFalse(imagecreatefromstring((string) $pngData));
+        $this->assertSame('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY', (new QrReader((string) $pngData, QrReader::SOURCE_TYPE_BLOB))->text());
     }
 
     public function testSetQrLogo(): void
@@ -74,9 +78,11 @@ final class QrTest extends TestCase
         $qr = new Qr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
         $qr->writeFile($filename);
 
-        $image = imagecreatefromstring((string) file_get_contents($filename));
+        $pngData = (string) file_get_contents($filename);
+        $image = imagecreatefromstring($pngData);
 
         $this->assertNotFalse($image);
-        $this->assertSame('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY', (new QrReader($filename))->text());
+        $this->assertSame("\x89PNG\r\n\x1a\n", substr($pngData, 0, 8));
+        $this->assertSame('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY', (new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB))->text());
     }
 }

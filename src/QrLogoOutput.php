@@ -15,13 +15,13 @@ use RuntimeException;
 
 class QrLogoOutput extends QRGdImagePNG
 {
-    protected function setTransparencyColor(): int
+    protected function setTransparencyColor(): void
     {
-        $color = parent::setTransparencyColor();
+        parent::setTransparencyColor();
         $logoPath = $this->options->logoPath;
 
         if ($logoPath === null) {
-            return $color;
+            return;
         }
 
         $logo = imagecreatefrompng($logoPath);
@@ -51,7 +51,5 @@ class QrLogoOutput extends QRGdImagePNG
             $logoHeight
         );
         imagedestroy($logo);
-
-        return $color;
     }
 }

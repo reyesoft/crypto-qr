@@ -12,6 +12,7 @@ namespace CryptoQr;
 
 use chillerlan\QRCode\Common\EccLevel;
 use chillerlan\QRCode\Output\QRGdImagePNG;
+use chillerlan\QRCode\Output\QROutputInterface;
 use chillerlan\QRCode\QRCode;
 use GdImage;
 use RuntimeException;
@@ -47,7 +48,7 @@ class Qr
         $this->size = $size;
     }
 
-    protected function writerResult(): string
+    protected function renderPng(): string
     {
         $image = $this->renderImage(1);
         $moduleCount = imagesx($image);
@@ -80,17 +81,17 @@ class Qr
 
     public function getString(): string
     {
-        return $this->writerResult();
+        return $this->renderPng();
     }
 
     public function getDataUri(): string
     {
-        return 'data:image/png;base64,' . base64_encode($this->writerResult());
+        return 'data:image/png;base64,' . base64_encode($this->renderPng());
     }
 
     public function writeFile(string $filename): void
     {
-        if (file_put_contents($filename, $this->writerResult()) === false) {
+        if (file_put_contents($filename, $this->renderPng()) === false) {
             throw new RuntimeException('Unable to write QR image.');
         }
     }
@@ -104,12 +105,18 @@ class Qr
             'logoSpaceHeight' => 9,
             'logoSpaceWidth' => 9,
             'outputBase64' => false,
+            'outputType' => QROutputInterface::CUSTOM,
             'outputInterface' => $this->logo === null ? QRGdImagePNG::class : QrLogoOutput::class,
             'returnResource' => true,
             'scale' => $scale,
         ]);
 
         /** @var GdImage */
-        return (new QRCode($options))->render($this->address);
+        return (new QRCode($options))->render($this->getPayload());
+    }
+
+    protected function getPayload(): string
+    {
+        return $this->address;
     }
 }
