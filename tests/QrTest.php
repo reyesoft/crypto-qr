@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace CryptoQr\Tests;
 
 use CryptoQr\Qr;
-use Endroid\QrCode\Logo\Logo;
 use PHPUnit\Framework\TestCase;
 use Zxing\QrReader;
 
@@ -27,6 +26,7 @@ final class QrTest extends TestCase
         $qr = new Qr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
         $pngData = $qr->getString();
 
+        $this->assertSame("\x89PNG\r\n\x1a\n", substr($pngData, 0, 8));
         $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
         $this->assertSame('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY', $reader->text());
     }
@@ -36,17 +36,35 @@ final class QrTest extends TestCase
         $qr = new Qr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
         $pngUri = $qr->getDataUri();
 
-        $this->assertNotEmpty($pngUri);
+        $this->assertStringStartsWith('data:image/png;base64,', $pngUri);
+        $this->assertNotFalse(imagecreatefromstring((string) base64_decode(substr($pngUri, 22))));
     }
 
     public function testSetQrLogo(): void
     {
         $qr = new Qr('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY');
-        $qr->setLogo(new Logo(__DIR__ . '/resources/img/BTC.png'));
+        $qr->setLogo(__DIR__ . '/resources/img/BTC.png');
         $qr->setSize(200);
-        $pngUri = $qr->getDataUri();
+        $pngData = $qr->getString();
 
-        $this->assertNotEmpty($pngUri);
+        $image = imagecreatefromstring($pngData);
+        $this->assertNotFalse($image);
+        $this->assertSame(200, imagesx($image));
+        $this->assertSame(200, imagesy($image));
+        $hasLogoColor = false;
+
+        for ($y = 70; $y < 130; $y++) {
+            for ($x = 70; $x < 130; $x++) {
+                $color = imagecolorsforindex($image, imagecolorat($image, $x, $y));
+
+                if ($color['red'] > 200 && $color['green'] > 50 && $color['green'] < 200 && $color['blue'] < 80) {
+                    $hasLogoColor = true;
+                }
+            }
+        }
+
+        $this->assertTrue($hasLogoColor);
+        $this->assertSame('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY', (new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB))->text());
     }
 
     public function testWriteQrFile(): void
@@ -59,5 +77,6 @@ final class QrTest extends TestCase
         $image = imagecreatefromstring((string) file_get_contents($filename));
 
         $this->assertNotFalse($image);
+        $this->assertSame('34ZwZ4cYiwZnYquM4KW67sqT7vY88215CY', (new QrReader($filename))->text());
     }
 }

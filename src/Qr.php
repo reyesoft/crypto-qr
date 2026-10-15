@@ -10,28 +10,21 @@ declare(strict_types=1);
 
 namespace CryptoQr;
 
-use Endroid\QrCode\Logo\LogoInterface;
-use Endroid\QrCode\QrCode;
-use Endroid\QrCode\Writer\PngWriter;
-use Endroid\QrCode\Writer\Result\ResultInterface;
+use chillerlan\QRCode\Common\EccLevel;
+use chillerlan\QRCode\Output\QRGdImagePNG;
+use chillerlan\QRCode\QRCode;
+use GdImage;
+use RuntimeException;
 
 class Qr
 {
-    /**
-     * @var PngWriter
-     */
-    protected $writer;
-    /**
-     * @var LogoInterface|null
-     */
-    protected $logo;
-    protected ?int $size = 300;
+    protected ?string $logo = null;
+    protected int $size = 300;
 
     public function __construct(
         private string $address = ''
     ) {
         $this->setAddress($address);
-        $this->writer = new PngWriter();
     }
 
     public function setAddress(string $address): void
@@ -44,7 +37,7 @@ class Qr
         return $this->address;
     }
 
-    public function setLogo(LogoInterface $logo): void
+    public function setLogo(string $logo): void
     {
         $this->logo = $logo;
     }
@@ -54,29 +47,69 @@ class Qr
         $this->size = $size;
     }
 
-    protected function writerResult(): ResultInterface
+    protected function writerResult(): string
     {
-        return $this->writer->write(
-            new QrCode(
-                data: $this->address,
-                size: $this->size
-            ),
-            $this->logo
-        );
+        $image = $this->renderImage(1);
+        $moduleCount = imagesx($image);
+        imagedestroy($image);
+
+        $image = $this->renderImage((int) ceil($this->size / $moduleCount));
+
+        if (imagesx($image) !== $this->size) {
+            $scaled = imagescale($image, $this->size, $this->size);
+            imagedestroy($image);
+
+            if ($scaled === false) {
+                throw new RuntimeException('Unable to scale QR image.');
+            }
+
+            $image = $scaled;
+        }
+
+        ob_start();
+        $written = imagepng($image);
+        $png = ob_get_clean();
+        imagedestroy($image);
+
+        if ($written === false || $png === false) {
+            throw new RuntimeException('Unable to encode QR image as PNG.');
+        }
+
+        return $png;
     }
 
     public function getString(): string
     {
-        return $this->writerResult()->getString();
+        return $this->writerResult();
     }
 
     public function getDataUri(): string
     {
-        return $this->writerResult()->getDataUri();
+        return 'data:image/png;base64,' . base64_encode($this->writerResult());
     }
 
     public function writeFile(string $filename): void
     {
-        $this->writerResult()->saveToFile($filename);
+        if (file_put_contents($filename, $this->writerResult()) === false) {
+            throw new RuntimeException('Unable to write QR image.');
+        }
+    }
+
+    protected function renderImage(int $scale): GdImage
+    {
+        $options = new CryptoQrOptions([
+            'addLogoSpace' => $this->logo !== null,
+            'eccLevel' => EccLevel::H,
+            'logoPath' => $this->logo,
+            'logoSpaceHeight' => 9,
+            'logoSpaceWidth' => 9,
+            'outputBase64' => false,
+            'outputInterface' => $this->logo === null ? QRGdImagePNG::class : QrLogoOutput::class,
+            'returnResource' => true,
+            'scale' => $scale,
+        ]);
+
+        /** @var GdImage */
+        return (new QRCode($options))->render($this->address);
     }
 }

@@ -10,8 +10,6 @@ declare(strict_types=1);
 
 namespace CryptoQr;
 
-use Endroid\QrCode\Writer\Result\ResultInterface;
-
 class CryptoQr extends Qr
 {
     /**
@@ -65,7 +63,7 @@ class CryptoQr extends Qr
         );
     }
 
-    protected function writerResult(): ResultInterface
+    protected function writerResult(): string
     {
         $this->buildData();
 

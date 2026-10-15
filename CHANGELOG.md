@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-10-15
+
+### Changed
+- Replaced `endroid/qr-code` with `chillerlan/php-qrcode` for PNG QR rendering.
+- Preserved the public QR API and cryptocurrency URI encoding.
+
 ## [2.1.0] - 2025-12-29
 
 ### Changed
